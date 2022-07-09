@@ -41,4 +41,10 @@ test.describe('Serebii Example Tests', () => {
     // assert that URL is correct for Forums page
     await expect(forums).toHaveURL('https://forums.serebii.net/');
   })
+
+  // this test is meant to demonstrate a failure
+  test('this test will fail', async ({ page }) => {
+    // assert that the title is something we know it isn't to demonstrate failure
+    await expect(page.locator('title')).toHaveText('I will fail');
+  })
 })
