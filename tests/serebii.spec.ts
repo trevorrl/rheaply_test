@@ -24,24 +24,21 @@ test.describe('Serebii Example Tests', () => {
     await expect(page.locator('title')).toContainText('Pokémon of the Week');
   })
 
-  test('navigate to Forums', async ({ page }) => {
-    // // find and click the forums link in the header
-    // await page.locator('text=Forums').first().click();
-    // // assert that the page has forums in the URL (using regex)
-    // await expect(page).toHaveURL('https://forums.serebii.net/');
+  // this test requires a different context since it involves multiple pages
+  test('navigate to Forums', async ({ context }) => {
+    // assign context and navigate first page to home
+    const home = await context.newPage();
+    await home.goto('https://serebii.net')
 
+    // on home page, click Forums link which opens a new page
     const [forums] = await Promise.all([
-        page.waitForEvent('page'),
-        page.locator('text=Forums').first().click()
+      context.waitForEvent('page'),
+      home.locator('text=Forums').first().click()
     ])
+
+    // wait for new Forums page to load
+    await forums.waitForLoadState();
+    // assert that URL is correct for Forums page
     await expect(forums).toHaveURL('https://forums.serebii.net/');
   })
 })
-
-// Get page after a specific action (e.g. clicking a link)
-// const [newPage] = await Promise.all([
-//     context.waitForEvent('page'),
-//     page.click('a[target="_blank"]') // Opens a new tab
-//   ])
-//   await newPage.waitForLoadState();
-//   console.log(await newPage.title());
